@@ -1,0 +1,5 @@
+Game Position:
+    The current games position will be stored in a 2D array of integers.
+        0 - no piece there
+        1 - bot piece there (i.e an "X")
+        2 - user piece is there (i.e. an "O")
