@@ -4,7 +4,11 @@
 using namespace std;
 
 int main() {
-    generateboard();
+    int gamePosition[6][7];
+
+    initGamePos(gamePosition);
+
+    
 
     return 0;
 }
