@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <limits>
 #include "board.h"
 using namespace std;
 
@@ -31,6 +32,8 @@ int main() {
     while(!checkWin(game)) {
         int move;
         generateBoard(game);
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         if (whoseTurn) {
             cout << player1 + ": ";
             cin >> move;
@@ -60,9 +63,15 @@ int main() {
         system("clear");
     }
 
-    if (whoseTurn) {
+    if (!whoseTurn) {
         system("clear");
         generateBoard(game);
-        cout << player1 + "has won\n" + player2 + "you suck\n";
+        cout << player1 + " has won\n" + player2 + " you suck\n";
+    } 
+    else {
+        system("clear");
+        generateBoard(game);
+        cout << player2 + " has won\n" + player1 + " you suck\n";
     }
+    return 0;
 }
