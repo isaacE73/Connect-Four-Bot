@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "generate board.h"
+#include "board.h"
 using namespace std;
 
 int main() {
@@ -10,6 +10,7 @@ int main() {
 
     initGamePos(gamePosition);
 
+    //print the board in the integer form
     for (int y = 0; y < 6; y++) { //incroment the y cord
         for (int x = 0; x < 7; x++) { //increment the x cord
             cout << gamePosition[x][y];
@@ -17,18 +18,8 @@ int main() {
         cout << endl;
     }
 
-    gamePosition[6][5] = 2;
+    
 
-    cout << endl;
-
-    makeMove(7, bot, gamePosition);
-
-    for (int y = 0; y < 6; y++) { //incroment the y cord
-        for (int x = 0; x < 7; x++) { //increment the x cord
-            cout << gamePosition[x][y];
-        }
-        cout << endl;
-    }
 
     return 0;
 }
