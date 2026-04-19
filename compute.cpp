@@ -5,69 +5,87 @@
 using namespace std;
 
 void creatBoard(int board[7][6], unsigned long long int pos, int turn);
-void save(int turn, unsigned long long int pos);
-
 /*
 Arguments:
     1. turns to be searched
     2. starting turn
-    3. what incrament will winConditions array be dynamically expanded
-    4. max num of index will winPositions array be allowed to have (each index is 8 bytes, recomended is 250e6 making it about 2GB large at its largest) 
 */
 int main(int argc, char* arg[]) {
-    int turns = stoi(arg[1]); //how many turns will be looked at
-    int startingTurn = stoi(arg[2]); //what turn to start at
+    unsigned int turns = stoi(arg[1]); //how many turns will be looked at
+    unsigned int startingTurn = stoi(arg[2]); //what turn to start at
     unsigned long long int positions; //how many turns will be checked
-    unsigned long long int *winPositons = nullptr; //will point to a dynamicaly allocated array that will store all the win positions
+    unsigned long long int wins;
     int board[7][6];//the game board
+    string lastTurn[stoi(arg[1])];
 
     for (int turn = 0; turn < turns; turn++) { //incument through the number of turns
 
+        wins = 0;
+
+        string name = to_string(turn + startingTurn);
+
+        name += ".bin";
+
+        ofstream file;
+
+        file.open(name, ios::binary);
+
         positions = pow(7, (startingTurn + turn)); //how many positions will be looked through
-        
-        int size = stoi(arg[3]);
-        winPositons = new unsigned long long int[stoi(arg[3])]; //allocate 1000 positions for win positions
 
-        int numWins = 0;
+        for (unsigned long long int curPos = 0; curPos < positions; curPos++) { //incrament through EVERY position in that turn and check for wins
+            system("clear");
 
-        for (unsigned long long int curPos = 0; curPos < positions; curPos++) { //incrament through EVERY turn and check for wins
+            for (int i = 0; i < turn; i++) { //display all the previous turns message
+                cout << lastTurn[i] << endl;
+            } 
+
+            cout << "Turn: " << turn + startingTurn << "\tPosition: " << curPos << "/" << positions << "\t wins: " << wins << endl;
 
             initGamePos(board);
-            creatBoard(board, curPos, startingTurn + turn);
+            creatBoard(board, curPos, startingTurn + turn); //create the current board position
 
             if (checkWin(board)) {
-                if (numWins > stoi(arg[4])) {
-                    save((startingTurn + turn), winPositons);
-                    numWins = 0;
+                wins++;
+                
+                int Turn = turn + startingTurn;
+
+                int bytes;
+                if (Turn <= 2) {
+                    bytes = 1;
                 }
-                else if (numWins > stoi(arg[3])) {
-                    unsigned long long int *temp = new unsigned long long int[size];
-
-                    *temp = *winPositons;
-
-                    delete[] winPositons;
-
-                    size += stoi(arg[3]);
-
-                    winPositons = new unsigned long long int[size];
-
-                    for (int i = 0; i < (size - stoi(arg[3])); i++) {
-                        winPositons[i] = temp[i];
-                    }
-
-                    delete[] temp;
+                else if (Turn <= 5) {
+                    bytes = 2;
+                }
+                else if (Turn <= 8) {
+                    bytes = 3;
+                }
+                else if (Turn <= 11) {
+                    bytes = 4;
+                }
+                else if (Turn <= 14) {
+                    bytes = 5;
+                }
+                else if (Turn <= 17) {
+                    bytes = 6;
+                }
+                else if (Turn <= 19) {
+                    bytes = 7;
+                }
+                else if (Turn = 20) {
+                    bytes = 8;
                 }
 
-                winPositons[numWins] = curPos;
-                numWins++;
+                file.write(reinterpret_cast<char*>(&Turn), 1);
+
+                file.write(reinterpret_cast<char*>(&curPos), bytes);
             }
-            
         }
+
+        file.close();
+
+        lastTurn[turn] = "Turn: " + to_string(turn + startingTurn) + "\tWins: " + to_string(wins); //generate message at the end of the turn store it in an array
     }
-}
-
-void save(int turn, unsigned long long int *winPositions) {
-
+    return 0;
 }
 
 void creatBoard(int board[7][6], unsigned long long int pos, int turn) {

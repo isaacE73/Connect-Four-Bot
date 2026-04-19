@@ -22,9 +22,9 @@ Game Position:
         To know how the board looks from just P and T do the following:
             P = Pₙ/7
             if (P%7 != 0)
-                P + 1 = P(ₙ - 1)
+                P(ₙ - 1) = P + 1
             else
-                P = P(ₙ - 1)
+                P(ₙ - 1) = P
             where n is what move you're on and n - 1 is the previous move.
             Using this you can determine all the previous moves and build the board using that.
         Knowing the P and T of a position, the range of P for all the possible positions for the subsiquent turn can be calculated.
