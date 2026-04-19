@@ -1,25 +1,68 @@
 #include <iostream>
 #include <string>
+#include <limits>
 #include "board.h"
+#include "Bot.h"
 using namespace std;
 
+void getPlayerName(string &player) {
+    cout << "Player, what is your name?\n";
+    getline(cin, player);
+    system("clear");
+    cout << "Are you ready?\n";
+    string randomBS;
+    cin >> randomBS;
+    cout << "Doesn't matter any way cuz we're starting\n";
+}
+
+int botMove(int game[7][6], int turn);
+
 int main() {
-    int gamePosition[7][6];
-    const bool bot = true;
-    const bool player = false;
+    string player;
 
-    initGamePos(gamePosition);
+    getPlayerName(player);
 
-    //print the board in the integer form
-    for (int y = 0; y < 6; y++) { //incroment the y cord
-        for (int x = 0; x < 7; x++) { //increment the x cord
-            cout << gamePosition[x][y];
+    int game[7][6];
+
+    initGamePos(game);
+
+    bool whoseTurn = false; //true = player
+    int turn = 1;
+ 
+    while(!checkWin(game)) {
+        int move;
+        generateBoard(game);
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        if (whoseTurn) {
+            cout << player + ": ";
+            cin >> move;
+
+            if (!makeMove(move, false, game)) {
+                system("clear");
+                cout << "invalid move\n";
+                continue;
+            }
+            else {
+                whoseTurn = !whoseTurn;
+            }
         }
-        cout << endl;
+        else {
+            move = botMove(game, turn);
+            makeMove(move, true, game);
+        }
+        turn++;
     }
 
-    
-
-
+    if (!whoseTurn) {
+        system("clear");
+        generateBoard(game);
+        cout << player + " has won\n";
+    } 
+    else {
+        system("clear");
+        generateBoard(game);
+        cout << "the bot has won\n" + player + " you suck\n";
+    }
     return 0;
 }
