@@ -74,9 +74,7 @@ int main(int argc, char* arg[]) {
                 else if (Turn = 20) {
                     bytes = 8;
                 }
-
-                file.write(reinterpret_cast<char*>(&Turn), 1);
-
+                
                 file.write(reinterpret_cast<char*>(&curPos), bytes);
             }
         }
