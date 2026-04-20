@@ -18,9 +18,13 @@ int main(int argc, char* arg[]) {
     int board[7][6];//the game board
     string lastTurn[stoi(arg[1])];
 
-    for (int turn = 0; turn < turns; turn++) { //incument through the number of turns
+    int Turn = startingTurn;
 
-        int Turn = turn + startingTurn;
+    for (int i = 0; i < turns; i++) { //incument through the number of turns
+
+        Turn = startingTurn;
+
+        Turn += 2 * i;
 
         int bytes;
         if (Turn <= 2) {
@@ -50,7 +54,7 @@ int main(int argc, char* arg[]) {
 
         wins = 0;
 
-        string name = to_string(turn + startingTurn);
+        string name = to_string(Turn);
 
         name += ".bin";
 
@@ -58,19 +62,19 @@ int main(int argc, char* arg[]) {
 
         file.open(name, ios::binary);
 
-        positions = pow(7, (startingTurn + turn)); //how many positions will be looked through
+        positions = pow(7, (Turn)); //how many positions will be looked through
 
         for (unsigned long long int curPos = 0; curPos < positions; curPos++) { //incrament through EVERY position in that turn and check for wins
             system("clear");
 
-            for (int i = 0; i < turn; i++) { //display all the previous turns message
+            for (int j = 0; j < i; j++) { //display all the previous turns message
                 cout << lastTurn[i] << endl;
             } 
 
-            cout << "Turn: " << turn + startingTurn << "\tPosition: " << curPos << "/" << positions << "\t wins: " << wins << endl;
+            cout << "Turn: " << Turn << "\tPosition: " << curPos << "/" << positions << "\t wins: " << wins << endl;
 
             initGamePos(board);
-            creatBoard(board, curPos, startingTurn + turn); //create the current board position
+            creatBoard(board, curPos, Turn); //create the current board position
 
             if (checkWin(board, true)) {
                 wins++;
@@ -81,7 +85,7 @@ int main(int argc, char* arg[]) {
 
         file.close();
 
-        lastTurn[turn] = "Turn: " + to_string(turn + startingTurn) + "\tWins: " + to_string(wins); //generate message at the end of the turn store it in an array
+        lastTurn[i] = "Turn: " + to_string(Turn) + "\tWins: " + to_string(wins); //generate message at the end of the turn store it in an array
     }
     return 0;
 }
