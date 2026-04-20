@@ -68,7 +68,7 @@ int main(int argc, char* arg[]) {
             system("clear");
 
             for (int j = 0; j < i; j++) { //display all the previous turns message
-                cout << lastTurn[i] << endl;
+                cout << lastTurn[j] << endl;
             } 
 
             cout << "Turn: " << Turn << "\tPosition: " << curPos << "/" << positions << "\t wins: " << wins << endl;
