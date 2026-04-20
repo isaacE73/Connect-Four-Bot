@@ -28,12 +28,12 @@ void creatBoard(int board[7][6], unsigned long long int pos, int turn) {
     }
 }
 
-int main() {
+int main(int argc, char* arg[]) {
     int game[7][6];
 
     initGamePos(game);
 
-    creatBoard(game, 111877, 6);
+    creatBoard(game, stoi(arg[2]), stoi(arg[1]));
 
     generateBoard(game);
 

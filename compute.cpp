@@ -20,6 +20,34 @@ int main(int argc, char* arg[]) {
 
     for (int turn = 0; turn < turns; turn++) { //incument through the number of turns
 
+        int Turn = turn + startingTurn;
+
+        int bytes;
+        if (Turn <= 2) {
+            bytes = 1;
+        }
+        else if (Turn <= 5) {
+            bytes = 2;
+        }
+        else if (Turn <= 8) {
+            bytes = 3;
+        }
+        else if (Turn <= 11) {
+            bytes = 4;
+        }
+        else if (Turn <= 14) {
+            bytes = 5;
+        }
+        else if (Turn <= 17) {
+            bytes = 6;
+        }
+        else if (Turn <= 19) {
+            bytes = 7;
+        }
+        else if (Turn = 20) {
+            bytes = 8;
+        }
+
         wins = 0;
 
         string name = to_string(turn + startingTurn);
@@ -44,37 +72,9 @@ int main(int argc, char* arg[]) {
             initGamePos(board);
             creatBoard(board, curPos, startingTurn + turn); //create the current board position
 
-            if (checkWin(board)) {
+            if (checkWin(board, true)) {
                 wins++;
-                
-                int Turn = turn + startingTurn;
 
-                int bytes;
-                if (Turn <= 2) {
-                    bytes = 1;
-                }
-                else if (Turn <= 5) {
-                    bytes = 2;
-                }
-                else if (Turn <= 8) {
-                    bytes = 3;
-                }
-                else if (Turn <= 11) {
-                    bytes = 4;
-                }
-                else if (Turn <= 14) {
-                    bytes = 5;
-                }
-                else if (Turn <= 17) {
-                    bytes = 6;
-                }
-                else if (Turn <= 19) {
-                    bytes = 7;
-                }
-                else if (Turn = 20) {
-                    bytes = 8;
-                }
-                
                 file.write(reinterpret_cast<char*>(&curPos), bytes);
             }
         }
