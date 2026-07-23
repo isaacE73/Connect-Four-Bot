@@ -1,42 +1,43 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Game.h"
 using namespace std;
 
-void initGamePos(int gamePosition[7][6]) { //initiate gamePos array
+Game::Game() {
     for (int y = 0; y < 6; y++) { //incroment the y cord
         for (int x = 0; x < 7; x++) { //increment the x cord
-            gamePosition[x][y] = 0; //sets every value to 0 initially
+            board[x][y] = 0; //sets every value to 0 initially
         }
     }
 }
 
-bool makeMove(int move, bool which, int gamePosition[7][6]) {
+bool Game::makeMove(int move, bool which) {
     if (move > 7 || move < 1) {
         return false;
     }
     if (which) { //if the bot is making a move 
         for (int i = 5; i >= 0; i--) { //incrament up the column that is being played
-            if (gamePosition[move - 1][i] != 0 && i == 0) return false; //will catch if the whole column is full and return false to siginify an illigal move
-            if (gamePosition[move - 1][i] != 0) continue; //check if the position in the column is taken
+            if (board[move - 1][i] != 0 && i == 0) return false; //will catch if the whole column is full and return false to siginify an illigal move
+            if (board[move - 1][i] != 0) continue; //check if the position in the column is taken
 
-            gamePosition[move - 1][i] = 1; //when an open position is found will set it to 2 representing a player piece
+            board[move - 1][i] = 1; //when an open position is found will set it to 2 representing a player piece
             break;
         }
     }
     else { //if the player is making a move
         for (int i = 5; i >= 0; i--) { //incrament up the column that is being played
-            if (gamePosition[move - 1][i] != 0 && i == 0) return false; //will catch if the whole column is full and return false to siginify an illigal move
-            if (gamePosition[move - 1][i] != 0) continue; //check if the position in the column is taken
+            if (board[move - 1][i] != 0 && i == 0) return false; //will catch if the whole column is full and return false to siginify an illigal move
+            if (board[move - 1][i] != 0) continue; //check if the position in the column is taken
 
-            gamePosition[move - 1][i] = 2; //when an open position is found will set it to 2 representing a player piece
+            board[move - 1][i] = 2; //when an open position is found will set it to 2 representing a player piece
             break;
         }
     }
     return true;
 }
 
-void generateBoard(int board[7][6]) { //initial generation of empty board
+void Game::generateBoard() { //initial generation of empty board
     for (int y = 0; y < 6; y++) {
         for (int x = 0; x < 7; x++) {
             cout << board[x][y];
@@ -45,13 +46,13 @@ void generateBoard(int board[7][6]) { //initial generation of empty board
     }
 }
 
-bool checkWin(int gamePosition[7][6]) {
+bool Game::checkWin() {
     // check for horizantal wins
     for (int y = 0; y < 6; y++) { //incrament through every row
         int inARow  = 0;
         for (int x = 0; x < 6; x++) { //increment accross the row
-            if (gamePosition[x][y] == 1 || gamePosition[x][y] == 2) { //check if theres a piece
-                if (gamePosition[x][y] == gamePosition[x + 1][y]) { //if that piece matches the one next to it
+            if (board[x][y] == 1 || board[x][y] == 2) { //check if theres a piece
+                if (board[x][y] == board[x + 1][y]) { //if that piece matches the one next to it
                     inARow++;
                     if (inARow == 3) { //if there has been 3 times where they hae matched that means there are four in a row
                         return true;
@@ -71,8 +72,8 @@ bool checkWin(int gamePosition[7][6]) {
     for (int x = 0; x < 7; x++) { //incrament through every column
         int inAColumn  = 0;
         for (int y = 0; y < 5; y++) { //incrament down the column
-            if (gamePosition[x][y] == 1 || gamePosition[x][y] == 2) { //check if there us a piece
-                if (gamePosition[x][y] == gamePosition[x][y + 1]) { //if that piece matches the one under to it
+            if (board[x][y] == 1 || board[x][y] == 2) { //check if there us a piece
+                if (board[x][y] == board[x][y + 1]) { //if that piece matches the one under to it
                     inAColumn++;
                     if (inAColumn == 3) { //if there has been 3 times where they hae matched that means there are four in a column
                         return true;
@@ -95,7 +96,7 @@ bool checkWin(int gamePosition[7][6]) {
         int inADiag = 0;
         if (i < 3) { //first three diagnals to the right
             while (x < 6 && y < 5) {
-                if (gamePosition[x][y] == gamePosition[x + 1][y + 1] && gamePosition[x][y] != 0) { //looks at the one diagnial from it and compares as long as its not a zero
+                if (board[x][y] == board[x + 1][y + 1] && board[x][y] != 0) { //looks at the one diagnial from it and compares as long as its not a zero
                     inADiag++;
                 }
                 else { //if blocked by a diffrent piece or blank space resets counter
@@ -108,7 +109,7 @@ bool checkWin(int gamePosition[7][6]) {
         }
         else if (i > 3) { //last three diagnal to the left
             while (x > 0 && y < 5) {
-                if (gamePosition[x][y] == gamePosition[x - 1][y + 1] && gamePosition[x][y] != 0) {//looks at the one diagnial from it and compares as long as its not a zero
+                if (board[x][y] == board[x - 1][y + 1] && board[x][y] != 0) {//looks at the one diagnial from it and compares as long as its not a zero
                     inADiag++;
                 }
                 else { //if blocked by a diffrent piece or blank space resets counter
@@ -121,7 +122,7 @@ bool checkWin(int gamePosition[7][6]) {
         }
         else { //middle two dagnals
             while (x > 0 && y < 3) { //left facing
-                if (gamePosition[x][y] == gamePosition[x - 1][y + 1] && gamePosition[x][y] != 0) {//looks at the one diagnial from it and compares as long as its not a zero
+                if (board[x][y] == board[x - 1][y + 1] && board[x][y] != 0) {//looks at the one diagnial from it and compares as long as its not a zero
                     inADiag++;
                 }
                 else { //if blocked by a diffrent piece or blank space resets counter
@@ -134,7 +135,7 @@ bool checkWin(int gamePosition[7][6]) {
             y = 0;
             x = i;
             while (x < 6 && y < 3) { //right facing
-                if (gamePosition[x][y] == gamePosition[x + 1][y + 1] && gamePosition[x][y] != 0) { //looks at the one diagnial from it and compares as long as its not a zero
+                if (board[x][y] == board[x + 1][y + 1] && board[x][y] != 0) { //looks at the one diagnial from it and compares as long as its not a zero
                     inADiag++;
                 }
                 else { //if blocked by a diffrent piece or blank space resets counter
@@ -153,7 +154,7 @@ bool checkWin(int gamePosition[7][6]) {
         int y = 5;
         int inADiag = 0;
         while (x > 0 && y > 0) { //left facing
-            if (gamePosition[x][y] == gamePosition[x - 1][y - 1] && gamePosition[x][y] != 0) {//looks at the one diagnial from it and compares as long as its not a zero
+            if (board[x][y] == board[x - 1][y - 1] && board[x][y] != 0) {//looks at the one diagnial from it and compares as long as its not a zero
                 inADiag++;
             }
             else { //if blocked by a diffrent piece or blank space resets counter
@@ -166,7 +167,7 @@ bool checkWin(int gamePosition[7][6]) {
         x = i;
         y = 5;
         while (x < 6 && y > 0) { //right facing
-            if (gamePosition[x][y] == gamePosition[x + 1][y - 1] && gamePosition[x][y] != 0) {//looks at the one diagnial from it and compares as long as its not a zero
+            if (board[x][y] == board[x + 1][y - 1] && board[x][y] != 0) {//looks at the one diagnial from it and compares as long as its not a zero
                 inADiag++;
             }
             else { //if blocked by a diffrent piece or blank space resets counter
@@ -180,13 +181,13 @@ bool checkWin(int gamePosition[7][6]) {
     return false;
 }
 
-bool checkWin(int gamePosition[7][6], bool onlyOne) {
+bool Game::checkWin(bool onlyOne) {
     // check for horizantal wins
     for (int y = 0; y < 6; y++) { //incrament through every row
         int inARow  = 0;
         for (int x = 0; x < 6; x++) { //increment accross the row
-            if (gamePosition[x][y] == 1) { //check if theres a piece
-                if (gamePosition[x][y] == gamePosition[x + 1][y]) { //if that piece matches the one next to it
+            if (board[x][y] == 1) { //check if theres a piece
+                if (board[x][y] == board[x + 1][y]) { //if that piece matches the one next to it
                     inARow++;
                     if (inARow == 3) { //if there has been 3 times where they hae matched that means there are four in a row
                         return true;
@@ -206,8 +207,8 @@ bool checkWin(int gamePosition[7][6], bool onlyOne) {
     for (int x = 0; x < 7; x++) { //incrament through every column
         int inAColumn  = 0;
         for (int y = 0; y < 5; y++) { //incrament down the column
-            if (gamePosition[x][y] == 1) { //check if there us a piece
-                if (gamePosition[x][y] == gamePosition[x][y + 1]) { //if that piece matches the one under to it
+            if (board[x][y] == 1) { //check if there us a piece
+                if (board[x][y] == board[x][y + 1]) { //if that piece matches the one under to it
                     inAColumn++;
                     if (inAColumn == 3) { //if there has been 3 times where they hae matched that means there are four in a column
                         return true;
@@ -230,7 +231,7 @@ bool checkWin(int gamePosition[7][6], bool onlyOne) {
         int inADiag = 0;
         if (i < 3) { //first three diagnals to the right
             while (x < 6 && y < 5) {
-                if (gamePosition[x][y] == gamePosition[x + 1][y + 1] && gamePosition[x][y] != 0 && gamePosition[x][y] == 1) { //looks at the one diagnial from it and compares as long as its not a zero
+                if (board[x][y] == board[x + 1][y + 1] && board[x][y] != 0 && board[x][y] == 1) { //looks at the one diagnial from it and compares as long as its not a zero
                     inADiag++;
                 }
                 else { //if blocked by a diffrent piece or blank space resets counter
@@ -243,7 +244,7 @@ bool checkWin(int gamePosition[7][6], bool onlyOne) {
         }
         else if (i > 3) { //last three diagnal to the left
             while (x > 0 && y < 5) {
-                if (gamePosition[x][y] == gamePosition[x - 1][y + 1] && gamePosition[x][y] != 0 && gamePosition[x][y] == 1) {//looks at the one diagnial from it and compares as long as its not a zero
+                if (board[x][y] == board[x - 1][y + 1] && board[x][y] != 0 && board[x][y] == 1) {//looks at the one diagnial from it and compares as long as its not a zero
                     inADiag++;
                 }
                 else { //if blocked by a diffrent piece or blank space resets counter
@@ -256,7 +257,7 @@ bool checkWin(int gamePosition[7][6], bool onlyOne) {
         }
         else { //middle two dagnals
             while (x > 0 && y < 3) { //left facing
-                if (gamePosition[x][y] == gamePosition[x - 1][y + 1] && gamePosition[x][y] != 0 && gamePosition[x][y] == 1) {//looks at the one diagnial from it and compares as long as its not a zero
+                if (board[x][y] == board[x - 1][y + 1] && board[x][y] != 0 && board[x][y] == 1) {//looks at the one diagnial from it and compares as long as its not a zero
                     inADiag++;
                 }
                 else { //if blocked by a diffrent piece or blank space resets counter
@@ -269,7 +270,7 @@ bool checkWin(int gamePosition[7][6], bool onlyOne) {
             y = 0;
             x = i;
             while (x < 6 && y < 3) { //right facing
-                if (gamePosition[x][y] == gamePosition[x + 1][y + 1] && gamePosition[x][y] != 0 && gamePosition[x][y] == 1) { //looks at the one diagnial from it and compares as long as its not a zero
+                if (board[x][y] == board[x + 1][y + 1] && board[x][y] != 0 && board[x][y] == 1) { //looks at the one diagnial from it and compares as long as its not a zero
                     inADiag++;
                 }
                 else { //if blocked by a diffrent piece or blank space resets counter
@@ -288,7 +289,7 @@ bool checkWin(int gamePosition[7][6], bool onlyOne) {
         int y = 5;
         int inADiag = 0;
         while (x > 0 && y > 0) { //left facing
-            if (gamePosition[x][y] == gamePosition[x - 1][y - 1] && gamePosition[x][y] != 0 && gamePosition[x][y] == 1) {//looks at the one diagnial from it and compares as long as its not a zero
+            if (board[x][y] == board[x - 1][y - 1] && board[x][y] != 0 && board[x][y] == 1) {//looks at the one diagnial from it and compares as long as its not a zero
                 inADiag++;
             }
             else { //if blocked by a diffrent piece or blank space resets counter
@@ -301,7 +302,7 @@ bool checkWin(int gamePosition[7][6], bool onlyOne) {
         x = i;
         y = 5;
         while (x < 6 && y > 0) { //right facing
-            if (gamePosition[x][y] == gamePosition[x + 1][y - 1] && gamePosition[x][y] != 0 && gamePosition[x][y] == 1) {//looks at the one diagnial from it and compares as long as its not a zero
+            if (board[x][y] == board[x + 1][y - 1] && board[x][y] != 0 && board[x][y] == 1) {//looks at the one diagnial from it and compares as long as its not a zero
                 inADiag++;
             }
             else { //if blocked by a diffrent piece or blank space resets counter
