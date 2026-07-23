@@ -1,11 +1,11 @@
 #include <iostream>
-#include "board.h"
+#include "Game.h"
 using namespace std;
 
-void creatBoard(int board[7][6], unsigned long long int pos, int turn) {
+void creatBoard(Game *leGame, unsigned long long int pos, int turn) {
     int *moves = new int[turn + 1];
 
-    bool bot = true;
+    bool which = true; //player or bot
 
     moves[0] = 4;
 
@@ -23,19 +23,17 @@ void creatBoard(int board[7][6], unsigned long long int pos, int turn) {
     }
 
     for (int i = 0; i <= turn; i++) { //make all the moves on the board
-        makeMove(moves[i], bot, board);
-        bot = !bot;
+        leGame->makeMove(moves[i], which);
+        which = !which;
     }
 }
 
 int main(int argc, char* arg[]) {
-    int game[7][6];
+    Game *leGame = new Game();
 
-    initGamePos(game);
+    creatBoard(leGame, stoi(arg[2]), stoi(arg[1]));
 
-    creatBoard(game, stoi(arg[2]), stoi(arg[1]));
-
-    generateBoard(game);
+    leGame->printBoard();
 
     return 0;
 }
