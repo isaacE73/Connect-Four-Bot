@@ -6,7 +6,7 @@ class Game {
     public:
         Game();
         bool makeMove(int move, bool which);
-        void generateBoard();
+        void printBoard();
         bool checkWin();
         bool checkWin(bool onlyOne);
 };
