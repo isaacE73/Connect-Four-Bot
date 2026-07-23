@@ -5,20 +5,30 @@
 
 declare -a times
 declare -i timestamps=0
-declare -i numOfTurns=$2-1
-declare -i endingTurn=$1+($2-1)
+declare -i numOfTurns=$(($2-1))
+declare -i Turn
 
-for i in $(seq $1 ); do
+for i in $(seq 0 $numOfTurns); do
+    if [[ $i%2 != 0 ]]; then
+         Turn=$1+$(($i*2))
+    fi
+
     times[timestamps]=$(date +%D%t%R)
     timestamps=$timestamps+1
-    ./findwins 1 $i
+    ./findwins $Turn
     times[timestamps]=$(date +%D%t%R)
     timestamps=$timestamps+1
+
+    echo "Start: ${times[$(($timestamps-2))]} End: ${times[$(($timestamps-1))]}" >> Output.txt
 done
 
 timestamps=0
 
 for i in $(seq 0 $numOfTurns); do
-    echo "Start: ${times[$timestamps]}"
-    timestamps=$timestamps+1
-done
+    if [[ $i%2 != 0 ]]; then
+         Turn=$1+$(($i*2))
+    fi
+
+    echo "Turn: $Turn Start: ${times[$timestamps]} End: ${times[$timestamps+1]}"
+    timestamps=$timestamps+2
+done 
